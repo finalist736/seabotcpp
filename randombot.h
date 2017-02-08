@@ -11,6 +11,8 @@ public:
     RandomBot();
     Point Turn();
     void TurnResult(const Point& lastHit, int result);
+    void EnemyTurnResult(const Point& lastHit, int result);
+    void Wait();
 };
 
 #endif // RANDOMBOT_H

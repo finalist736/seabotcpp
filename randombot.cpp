@@ -25,5 +25,15 @@ Point RandomBot::Turn()
 
 void RandomBot::TurnResult(const Point &lastHit, int result)
 {
-    //qDebug() << "turn result" << lastHit << result;
+    qDebug() << "RandomBot::TurnResult" << lastHit.y << lastHit.x << result;
+}
+
+void RandomBot::EnemyTurnResult(const Point &lastHit, int result)
+{
+    qDebug() << "RandomBot::EnemyTurnResult" << lastHit.y << lastHit.x << result;
+}
+
+void RandomBot::Wait()
+{
+    qDebug() << "waiting for bvb opponent";
 }
