@@ -11,8 +11,7 @@ int main(int argc, char *argv[])
     qsrand(QDateTime::currentDateTime().toTime_t());
     RandomBot * bot = new RandomBot();
     bot->connectToHost("127.0.0.1", 11000);
-    bot->waitForConnected();
-    bot->write("test test test");
+
     //bot->tcp->waitForBytesWritten();
 
 //    QTcpSocket *s = new QTcpSocket(&a);

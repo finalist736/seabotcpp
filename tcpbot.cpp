@@ -5,6 +5,10 @@
 TcpBot::TcpBot(QObject *parent) : QTcpSocket(parent)
 {
     connect(this, SIGNAL(readyRead()), SLOT(readyRead()));
+    connect(this, SIGNAL(connected()), SLOT(connected()));
+    connect(this, SIGNAL(disconnected()), SLOT(disconnected()));
+    connect(this, SIGNAL(error(QAbstractSocket::SocketError)),
+            SLOT(error(QAbstractSocket::SocketError)));
 }
 
 void TcpBot::Auth()

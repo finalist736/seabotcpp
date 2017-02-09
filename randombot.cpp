@@ -4,6 +4,7 @@
 
 RandomBot::RandomBot()
 {
+    mAuthKey = "1231231231231312213";
     for (int i=0;i<10;i++)
     {
         for (int j=0;j<10;j++)
@@ -37,3 +38,4 @@ void RandomBot::Wait()
 {
     qDebug() << "waiting for bvb opponent";
 }
+

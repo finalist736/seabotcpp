@@ -26,6 +26,7 @@ public:
     virtual void TurnResult(const Point& lastHit, int result) = 0;
     virtual void EnemyTurnResult(const Point& lastHit, int result) = 0;
     virtual void Wait() = 0;
+    //virtual void EndBattle(bool winner) = 0;
 
 signals:
 
