@@ -13,7 +13,7 @@ public:
     void TurnResult(const Point& lastHit, int result);
     void EnemyTurnResult(const Point& lastHit, int result);
     void Wait();
-    //void EndBattle();
+    void BattleEnd(bool winner);
 };
 
 #endif // RANDOMBOT_H

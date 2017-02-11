@@ -1,8 +1,9 @@
 #include "tcpbot.h"
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 
-TcpBot::TcpBot(QObject *parent) : QTcpSocket(parent)
+TcpBot::TcpBot(QObject *parent) : QTcpSocket(parent), msgSize(0), m_stream(this)
 {
     connect(this, SIGNAL(readyRead()), SLOT(readyRead()));
     connect(this, SIGNAL(connected()), SLOT(connected()));
@@ -11,31 +12,27 @@ TcpBot::TcpBot(QObject *parent) : QTcpSocket(parent)
             SLOT(error(QAbstractSocket::SocketError)));
 }
 
-void TcpBot::Auth()
+void TcpBot::Send(const QByteArray &result)
 {
-    QJsonObject bvb;
-    bvb["bvb"] = TcpBot::Server;
-    QJsonDocument doc;
-    doc.setObject(bvb);
-    QByteArray data = doc.toJson();
-    write(data);
+    //qDebug() << "<=" << result;
+    //add 4 bytes of header
+    QByteArray tosend;
+    int size = result.length();
+    tosend.reserve(size + 4);
+
+    tosend.append(static_cast<char>(((size >> 24) & 0xFF)));
+    tosend.append(static_cast<char>(((size >> 16) & 0xFF)));
+    tosend.append(static_cast<char>(((size >> 8) & 0xFF)));
+    tosend.append(static_cast<char>((size & 0xFF)));
+
+    tosend.append(result);
+
+    write(tosend);
+    waitForBytesWritten();
 }
 
-void TcpBot::readyRead()
+void TcpBot::ParseProtocol(const QJsonDocument &doc)
 {
-    qDebug() << "ready read!!! ";
-
-    QByteArray alldata = readAll();
-
-    qDebug() << alldata;
-    QJsonParseError parseError;
-    auto doc = QJsonDocument::fromJson(alldata, &parseError);
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qDebug() << parseError.errorString();
-        return;
-    }
-
     auto obj = doc.object();
 
     if (obj.contains("auth")) {
@@ -53,14 +50,98 @@ void TcpBot::readyRead()
         if (bvbResponse.contains("wait")) {
             Wait();
         } else {
-            // bvb ready to battle, lets prepare
+            if (bvbResponse.contains("id"))
+            {
+                mOpponentID = bvbResponse["id"].toInt();
+            }
+            if (bvbResponse.contains("name"))
+            {
+                mOpponentName = bvbResponse["name"].toString();
+            }
+            if (bvbResponse.contains("ships"))
+            {
+                QJsonArray a = bvbResponse["ships"].toArray();
+                int i = 0, j = 0;
+                for (auto it = a.begin(); it!=a.end(); ++it)
+                {
+                    QJsonValue v(*it);
+                    mPole[i][j] = v.toInt();
+                    j++;
+                    if (j == 10){
+                        j = 0;
+                        i++;
+                    }
+                }
+                qDebug() << mPole;
+            }
         }
     }
+}
+
+void TcpBot::Auth()
+{
+    QJsonObject bvb;
+    QJsonObject placeShips;
+    QJsonArray ships;
+    ships.append(0);
+    ships.append(0);
+    ships.append(0);
+    ships.append(0);
+    placeShips["place"] = TcpBot::Server;
+    placeShips["ships"] = ships;
+    bvb["bvb"] = placeShips;
+    QJsonDocument doc;
+    doc.setObject(bvb);
+    QByteArray data = doc.toJson();
+    Send(data);
+}
 
 
-    auto a = this->Turn();
 
-    qDebug() << "random hit: " << a.x << a.y;
+void TcpBot::readyRead()
+{
+    //qDebug() << "ready read!!! ";
+
+    if (state() == ConnectedState)
+    {
+        if (msgSize == 0 && bytesAvailable() < 4) {
+            return;
+        }
+        if (msgSize == 0) {
+            m_stream >> msgSize;
+        }
+
+        if (bytesAvailable() < msgSize) {
+            return;
+        }
+
+        QByteArray alldata;
+        unsigned char sym = 0;
+        while (msgSize > 0)
+        {
+            m_stream >> sym;
+            alldata.append(sym);
+            msgSize--;
+        }
+        msgSize = 0;
+
+        // *****
+        // parse data
+        qDebug() << alldata;
+        QJsonParseError parseError;
+        auto doc = QJsonDocument::fromJson(alldata, &parseError);
+        if (parseError.error != QJsonParseError::NoError)
+        {
+            qDebug() << parseError.errorString();
+            return;
+        }
+        ParseProtocol(doc);
+        // *****
+        if (bytesAvailable() > 0)
+        {
+            readyRead();
+        }
+    }
 }
 
 void TcpBot::connected()
@@ -71,7 +152,7 @@ void TcpBot::connected()
     doc.setObject(auth);
 
     QByteArray data = doc.toJson();
-    write(data);
+    Send(data);
 }
 
 void TcpBot::disconnected()

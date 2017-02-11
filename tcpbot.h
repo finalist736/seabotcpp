@@ -3,7 +3,9 @@
 
 #include <QObject>
 #include <QTcpSocket>
+#include <QDataStream>
 
+const int N = 10;
 
 struct Point {
     int x,y;
@@ -11,6 +13,10 @@ struct Point {
 
 class TcpBot : public QTcpSocket
 {
+    Q_OBJECT
+private:
+    int msgSize;
+    QDataStream m_stream;
 protected:
     enum ServerShipsPlace {
         Server = 0,
@@ -18,15 +24,25 @@ protected:
     };
 
     QString mAuthKey;
-    Q_OBJECT
+    int mOpponentID;
+    QString mOpponentName;
+
+    int mPole[N][N];
+
+
 public:
     explicit TcpBot(QObject *parent = 0);
+
+    void Send(const QByteArray& result);
+    void ParseProtocol(const QJsonDocument& doc);
+
+
     virtual void Auth();
     virtual Point Turn() = 0;
     virtual void TurnResult(const Point& lastHit, int result) = 0;
     virtual void EnemyTurnResult(const Point& lastHit, int result) = 0;
     virtual void Wait() = 0;
-    //virtual void EndBattle(bool winner) = 0;
+    virtual void BattleEnd(bool winner) = 0;
 
 signals:
 

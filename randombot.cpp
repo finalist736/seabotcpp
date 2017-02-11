@@ -39,3 +39,8 @@ void RandomBot::Wait()
     qDebug() << "waiting for bvb opponent";
 }
 
+void RandomBot::BattleEnd(bool winner)
+{
+    qDebug() << (winner ? "winner" : "loser");
+}
+
