@@ -16,6 +16,9 @@ RandomBot::RandomBot()
 
 Point RandomBot::Turn()
 {
+    if (arr.length() == 0) {
+        return Point{0,0};
+    }
     int rnd1 = qrand() % arr.length();
     Point a = arr[rnd1];
     arr.removeAt(rnd1);

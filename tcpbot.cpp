@@ -2,6 +2,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <iostream>
 
 TcpBot::TcpBot(QObject *parent) : QTcpSocket(parent), msgSize(0), m_stream(this)
 {
@@ -42,6 +43,7 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
             qDebug() << "Auth error: " << authResponse["error"].toString();
             return;
         } else {
+            myID = authResponse["id"].toInt();
             Auth();
         }
     } else if (obj.contains("bvb")) {
@@ -72,8 +74,33 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
                         i++;
                     }
                 }
-                qDebug() << mPole;
+                //qDebug() << mPole;
+//                for (i=0;i<10;i++)
+//                {
+//                    for (j=0;j<10;j++)
+//                    {
+//                        std::cout << mPole[i][j];
+//                    }
+//                    std::cout << "\n";
+//                }
             }
+        }
+    } else if (obj.contains("turn")) {
+        QJsonObject turnObject = obj["turn"].toObject();
+        //qDebug() << turnObject;
+        if (myID == turnObject["id"].toInt()) {
+            Point shot = Turn();
+            QJsonArray shotArray;
+            shotArray.append(shot.y);
+            shotArray.append(shot.x);
+            QJsonObject shotObject;
+            shotObject["shot"] = shotArray;
+            QJsonObject shotObjectTurn;
+            shotObjectTurn["turn"] = shotObject;
+            QJsonDocument doc;
+            doc.setObject(shotObjectTurn);
+            QByteArray data = doc.toJson();
+            Send(data);
         }
     }
 }

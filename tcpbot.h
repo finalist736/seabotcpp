@@ -24,6 +24,7 @@ protected:
     };
 
     QString mAuthKey;
+    int myID;
     int mOpponentID;
     QString mOpponentName;
 
