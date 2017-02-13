@@ -43,7 +43,7 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
             qDebug() << "Auth error: " << authResponse["error"].toString();
             return;
         } else {
-            myID = authResponse["id"].toInt();
+            SetMyID(authResponse["id"].toInt());
             Auth();
         }
     } else if (obj.contains("bvb")) {
@@ -87,21 +87,28 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
         }
     } else if (obj.contains("turn")) {
         QJsonObject turnObject = obj["turn"].toObject();
-        //qDebug() << turnObject;
-        if (myID == turnObject["id"].toInt()) {
-            Point shot = Turn();
-            QJsonArray shotArray;
-            shotArray.append(shot.y);
-            shotArray.append(shot.x);
-            QJsonObject shotObject;
-            shotObject["shot"] = shotArray;
-            QJsonObject shotObjectTurn;
-            shotObjectTurn["turn"] = shotObject;
-            QJsonDocument doc;
-            doc.setObject(shotObjectTurn);
-            QByteArray data = doc.toJson();
-            Send(data);
+
+        if (turnObject.contains("result")) {
+            TurnResult(lastTurn, turnObject["result"].toInt());
+        } else if (turnObject.contains("id")) {
+            if (MyID() == turnObject["id"].toInt()) {
+                lastTurn = Turn();
+                QJsonArray shotArray;
+                shotArray.append(lastTurn.y);
+                shotArray.append(lastTurn.x);
+                QJsonObject shotObject;
+                shotObject["shot"] = shotArray;
+                QJsonObject shotObjectTurn;
+                shotObjectTurn["turn"] = shotObject;
+                QJsonDocument doc;
+                doc.setObject(shotObjectTurn);
+                QByteArray data = doc.toJson();
+                Send(data);
+            }
+        } else if (turnObject.contains("opponent")) {
+            //qDebug() << turnObject;
         }
+
     }
 }
 

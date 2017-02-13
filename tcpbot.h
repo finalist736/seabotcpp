@@ -16,19 +16,25 @@ class TcpBot : public QTcpSocket
     Q_OBJECT
 private:
     int msgSize;
+    int myID;
     QDataStream m_stream;
 protected:
     enum ServerShipsPlace {
         Server = 0,
         Bot
     };
-
-    QString mAuthKey;
-    int myID;
     int mOpponentID;
+    QString mAuthKey;
     QString mOpponentName;
-
     int mPole[N][N];
+    Point lastTurn;
+
+    inline void SetMyID(int id) {
+        myID = id;
+    }
+    int MyID() const {
+        return myID;
+    }
 
 
 public:
