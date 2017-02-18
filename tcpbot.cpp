@@ -84,6 +84,7 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
 //                    std::cout << "\n";
 //                }
             }
+            BattleStart(mOpponentID, mOpponentName);
         }
     } else if (obj.contains("turn")) {
         QJsonObject turnObject = obj["turn"].toObject();

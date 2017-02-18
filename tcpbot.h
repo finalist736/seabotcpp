@@ -49,6 +49,7 @@ public:
 // virtual abstract methods
     // calls when bot authed
     virtual void Auth();
+    virtual void BattleStart(int opponentID, const QString& opponentName) = 0;
     // calls when need shot
     virtual Point Turn() = 0;
     // calls when we get shot result

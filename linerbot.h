@@ -11,6 +11,8 @@ public:
     LinerBot(QObject *parent = 0);
 
     void Auth();
+
+    void BattleStart(int opponentID, const QString& opponentName);
     Point Turn();
     void TurnResult(const Point& lastHit, int result);
     void EnemyTurnResult(const Point& lastHit, int result);

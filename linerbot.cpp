@@ -11,6 +11,11 @@ void LinerBot::Auth()
     TcpBot::Auth();
 }
 
+void LinerBot::BattleStart(int opponentID, const QString &opponentName)
+{
+    qDebug() << "opponentID:" << opponentID << "opponentName:" << opponentName;
+}
+
 Point LinerBot::Turn()
 {
     if (currentPoint.x == 10) {

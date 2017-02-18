@@ -14,6 +14,11 @@ RandomBot::RandomBot()
     }
 }
 
+void RandomBot::BattleStart(int opponentID, const QString &opponentName)
+{
+    qDebug() << "opponentID:" << opponentID << "opponentName:" << opponentName;
+}
+
 Point RandomBot::Turn()
 {
     if (arr.length() == 0) {

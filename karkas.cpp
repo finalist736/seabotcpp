@@ -3,10 +3,15 @@
 Karkas::Karkas(QObject *parent):
     TcpBot(parent)
 {
-
+    SetAuthKey("anykey");
 }
 
 void Karkas::Auth()
+{
+
+}
+
+void Karkas::BattleStart(int opponentID, const QString &opponentName)
 {
 
 }
