@@ -36,6 +36,9 @@ protected:
         return myID;
     }
 
+    inline void SetAuthKey(const QString& key){
+        mAuthKey = key;
+    }
 
 public:
     explicit TcpBot(QObject *parent = 0);
@@ -43,12 +46,18 @@ public:
     void Send(const QByteArray& result);
     void ParseProtocol(const QJsonDocument& doc);
 
-
+// virtual abstract methods
+    // calls when bot authed
     virtual void Auth();
+    // calls when need shot
     virtual Point Turn() = 0;
+    // calls when we get shot result
     virtual void TurnResult(const Point& lastHit, int result) = 0;
+    // calls when opponent shot and give result
     virtual void EnemyTurnResult(const Point& lastHit, int result) = 0;
+    // calls when we wait for bvb opponent
     virtual void Wait() = 0;
+    // calls when battle end, with winner flag
     virtual void BattleEnd(bool winner) = 0;
 
 signals:

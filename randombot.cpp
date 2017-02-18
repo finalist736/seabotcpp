@@ -22,7 +22,7 @@ Point RandomBot::Turn()
     int rnd1 = qrand() % arr.length();
     Point a = arr[rnd1];
     arr.removeAt(rnd1);
-
+// [0,0], [0,2]
     //qDebug() << "turn";
     return a;
 }
