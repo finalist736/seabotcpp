@@ -15,6 +15,7 @@ class TcpBot : public QTcpSocket
 {
     Q_OBJECT
 private:
+    bool mbWinner;
     int msgSize;
     int myID;
     QDataStream m_stream;
@@ -40,8 +41,14 @@ protected:
         mAuthKey = key;
     }
 
+
+
 public:
     explicit TcpBot(QObject *parent = 0);
+
+    inline bool Winner() const {
+        return mbWinner;
+    }
 
     void Send(const QByteArray& result);
     void ParseProtocol(const QJsonDocument& doc);
@@ -59,10 +66,10 @@ public:
     // calls when we wait for bvb opponent
     virtual void Wait() = 0;
     // calls when battle end, with winner flag
-    virtual void BattleEnd(bool winner) = 0;
+    virtual void BattleEnd(bool mbWinner) = 0;
 
 signals:
-
+    void Win(QString);
 public slots:
     void readyRead();
     void connected();

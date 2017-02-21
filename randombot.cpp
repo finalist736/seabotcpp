@@ -16,7 +16,7 @@ RandomBot::RandomBot()
 
 void RandomBot::BattleStart(int opponentID, const QString &opponentName)
 {
-    qDebug() << "opponentID:" << opponentID << "opponentName:" << opponentName;
+    //qDebug() << "opponentID:" << opponentID << "opponentName:" << opponentName;
 }
 
 Point RandomBot::Turn()
@@ -34,21 +34,26 @@ Point RandomBot::Turn()
 
 void RandomBot::TurnResult(const Point &lastHit, int result)
 {
-    qDebug() << "RandomBot::TurnResult" << lastHit.y << lastHit.x << result;
+    //qDebug() << "RandomBot::TurnResult" << lastHit.y << lastHit.x << result;
 }
 
 void RandomBot::EnemyTurnResult(const Point &lastHit, int result)
 {
-    qDebug() << "RandomBot::EnemyTurnResult" << lastHit.y << lastHit.x << result;
+    //qDebug() << "RandomBot::EnemyTurnResult" << lastHit.y << lastHit.x << result;
 }
 
 void RandomBot::Wait()
 {
-    qDebug() << "waiting for bvb opponent";
+    //qDebug() << "waiting for bvb opponent";
 }
 
 void RandomBot::BattleEnd(bool winner)
 {
-    qDebug() << (winner ? "winner" : "loser");
+    if (winner){
+        //qDebug() << "URA!";
+        emit Win(QString("Random"));
+    } else {
+        //qDebug() << "I'll be back!";
+    }
 }
 

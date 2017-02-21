@@ -4,7 +4,11 @@
 #include <QJsonArray>
 #include <iostream>
 
-TcpBot::TcpBot(QObject *parent) : QTcpSocket(parent), msgSize(0), m_stream(this)
+TcpBot::TcpBot(QObject *parent) :
+    QTcpSocket(parent),
+    mbWinner(false),
+    msgSize(0),
+    m_stream(this)
 {
     connect(this, SIGNAL(readyRead()), SLOT(readyRead()));
     connect(this, SIGNAL(connected()), SLOT(connected()));
@@ -110,6 +114,9 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
             //qDebug() << turnObject;
         }
 
+    } else if (obj.contains("end")) {
+        QJsonObject end = obj["end"].toObject();
+        BattleEnd(end["winner"].toInt() == MyID());
     }
 }
 
@@ -162,7 +169,7 @@ void TcpBot::readyRead()
 
         // *****
         // parse data
-        qDebug() << alldata;
+        //qDebug() << alldata;
         QJsonParseError parseError;
         auto doc = QJsonDocument::fromJson(alldata, &parseError);
         if (parseError.error != QJsonParseError::NoError)
@@ -192,10 +199,12 @@ void TcpBot::connected()
 
 void TcpBot::disconnected()
 {
-    qDebug() << "socket disconnected";
+    //qDebug() << "socket disconnected";
+
 }
 
 void TcpBot::error(QAbstractSocket::SocketError e)
 {
-    qDebug() << e;
+    deleteLater();
+    //qDebug() << e;
 }
