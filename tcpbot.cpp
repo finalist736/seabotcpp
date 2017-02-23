@@ -112,7 +112,6 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
             }
         } else if (turnObject.contains("opponent")) {
             QJsonObject opponent = turnObject["opponent"].toObject();
-            qDebug() << opponent;
             QJsonArray shot = opponent["shot"].toArray();
             Point shotPoint = Point{shot[1].toInt(),shot[0].toInt()};
             EnemyTurnResult(shotPoint, opponent["result"].toInt());

@@ -13,7 +13,7 @@ void LinerBot::Auth()
 
 void LinerBot::BattleStart(int opponentID, const QString &opponentName)
 {
-    //qDebug() << "opponentID:" << opponentID << "opponentName:" << opponentName;
+    qDebug() << "opponentID:" << opponentID << "opponentName:" << opponentName;
 }
 
 Point LinerBot::Turn()
@@ -30,18 +30,22 @@ Point LinerBot::Turn()
 void LinerBot::TurnResult(const Point &lastHit, int result)
 {
     if (result == 1) {
-        //qDebug() << "BOOM!";
+        qDebug() << "BOOM!";
+    } else if (result == 2) {
+        qDebug() << "******* KILL ********";
     } else {
-        //qDebug() << "miss...";
+        qDebug() << "miss...";
     }
 }
 
 void LinerBot::EnemyTurnResult(const Point &lastHit, int result)
 {
     if (result == 1) {
-        //qDebug() << "OOPS";
+        qDebug() << "OOPS";
+    } else if (result == 2) {
+        qDebug() << "******* DEAD ********";
     } else {
-        //qDebug() << "haha";
+        qDebug() << "haha";
     }
 }
 
@@ -53,9 +57,9 @@ void LinerBot::Wait()
 void LinerBot::BattleEnd(bool win)
 {
     if (win){
-        //qDebug() << "URA!";
+        qDebug() << "URA!";
         emit Win("Linear");
     } else {
-        //qDebug() << "I'll be back!";
+        qDebug() << "I'll be back!";
     }
 }

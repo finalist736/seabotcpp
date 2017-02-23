@@ -21,12 +21,14 @@ void WinsCounter::Win(QString name)
         mWinsCount[name] = 1;
     }
     counts++;
-    if (counts == 500)
-    {
+    //if (counts % 10 == 0)
+    //{
+        qDebug() << "--------";
         qDebug() << "Random" << mWinsCount["Random"];
         qDebug() << "Linear" << mWinsCount["Linear"];
-    } else {
+        qDebug() << "--------";
+    //} else {
         //qDebug() << counts;
-    }
+    //}
     mu.unlock();
 }
