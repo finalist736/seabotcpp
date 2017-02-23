@@ -5,12 +5,15 @@
 #include "linerbot.h"
 #include "randombot.h"
 #include "winscounter.h"
+#ifdef Q_OS_LINUX
 #include "qeventdispatcher_epoll.h"
-
+#endif
 
 int main(int argc, char *argv[])
 {
+#ifdef Q_OS_LINUX
     QCoreApplication::setEventDispatcher(new QEventDispatcherEpoll);
+#endif
 
     QCoreApplication a(argc, argv);
 
@@ -21,7 +24,7 @@ int main(int argc, char *argv[])
 
     RandomBot * rbot = new RandomBot();
     //QMetaObject::Connection c = QObject::connect(rbot, SIGNAL(Win(QString)), wc, SLOT(Win(QString)));
-    rbot->connectToHost("127.0.0.1", 11000);
+    rbot->connectToHost("88.99.171.92", 11000);
 
 
     //LinerBot * bot = new LinerBot(&a);
