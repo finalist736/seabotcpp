@@ -117,7 +117,6 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
             Point shotPoint = Point{shot[1].toInt(),shot[0].toInt()};
             EnemyTurnResult(shotPoint, opponent["result"].toInt());
         }
-
     } else if (obj.contains("end")) {
         QJsonObject end = obj["end"].toObject();
         BattleEnd(end["winner"].toInt() == MyID());
@@ -209,6 +208,7 @@ void TcpBot::disconnected()
 
 void TcpBot::error(QAbstractSocket::SocketError e)
 {
+    Q_UNUSED(e);
     deleteLater();
     //qDebug() << e;
 }
