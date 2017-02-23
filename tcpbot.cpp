@@ -111,7 +111,11 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
                 Send(data);
             }
         } else if (turnObject.contains("opponent")) {
-            //qDebug() << turnObject;
+            QJsonObject opponent = turnObject["opponent"].toObject();
+            qDebug() << opponent;
+            QJsonArray shot = opponent["shot"].toArray();
+            Point shotPoint = Point{shot[1].toInt(),shot[0].toInt()};
+            EnemyTurnResult(shotPoint, opponent["result"].toInt());
         }
 
     } else if (obj.contains("end")) {
