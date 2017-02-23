@@ -1,4 +1,4 @@
-#include "tcpbot.h"
+﻿#include "tcpbot.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -119,6 +119,8 @@ void TcpBot::ParseProtocol(const QJsonDocument &doc)
     } else if (obj.contains("end")) {
         QJsonObject end = obj["end"].toObject();
         BattleEnd(end["winner"].toInt() == MyID());
+    } else if (obj.contains("error")) {
+        qDebug() << obj["error"].toObject();
     }
 }
 
@@ -201,7 +203,7 @@ void TcpBot::connected()
 
 void TcpBot::disconnected()
 {
-    //qDebug() << "socket disconnected";
+    qDebug() << "socket disconnected";
 
 }
 
